@@ -1,0 +1,38 @@
+
+name: Scrape latest data
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron:  '11 0,17 * * *'
+
+jobs:
+  scheduled:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out this repo
+      uses: actions/checkout@v2
+    - name: Fetch latest data modely_01_okresni_statistika.csv
+      run: |-
+        curl "https://onemocneni-aktualne.mzcr.cz/api/account/mifLSHU2re3GAmiotOkdYExeoQ/file/modely%252Fmodely_01_okresni_statistika.csv" > modely_01_okresni_statistika.csv
+    - name: Fetch latest modely_02_efektivita_testovani.csv
+      run: |-
+        curl "https://onemocneni-aktualne.mzcr.cz/api/account/mifLSHU2re3GAmiotOkdYExeoQ/file/modely%252Fmodely_02_efektivita_testovani.csv" > modely_02_efektivita_testovani.csv
+    - name: Fetch latest modely_03_testy_pozitivnich.csv
+      run: |-
+        curl "https://onemocneni-aktualne.mzcr.cz/api/account/mifLSHU2re3GAmiotOkdYExeoQ/file/modely%252Fmodely_03_testy_pozitivnich.csv" > modely_03_testy_pozitivnich.csv
+    - name: Fetch latest modely_04_hospitalizovani.csv
+      run: |-
+        curl "https://onemocneni-aktualne.mzcr.cz/api/account/mifLSHU2re3GAmiotOkdYExeoQ/file/modely%252Fmodely_04_hospitalizovani.csv" > modely_04_hospitalizovani.csv
+    - name: Fetch latest modely_05_hospitalizovani_analyza.csv
+      run: |-
+        curl "https://onemocneni-aktualne.mzcr.cz/api/account/mifLSHU2re3GAmiotOkdYExeoQ/file/modely%252Fmodely_05_hospitalizovani_analyza.csv" > modely_05_hospitalizovani_analyza.csv
+    - name: Commit and push if it changed
+      run: |-
+        git config user.name "Automated"
+        git config user.email "actions@users.noreply.github.com"
+        git add -A
+        timestamp=$(date -u)
+        git commit -m "Latest data: ${timestamp}" || exit 0
+        git push
