@@ -1,0 +1,1 @@
+# cz-covid-predictive-data
